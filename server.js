@@ -1,5 +1,7 @@
-const puppeteer = require("puppeteer");
-const cheerio = require("cheerio");
+// const puppeteer = require("puppeteer");
+// const cheerio = require("cheerio");
+const puppeteer = require("puppeteer-core");
+const chromium = require("@sparticuz/chromium");
 const express = require("express");
 
 const app = express();
@@ -39,7 +41,13 @@ app.post("/random-case", async (req, res) => {
   let browser;
 
   try {
-    browser = await puppeteer.launch({ headless: "new" });
+    // browser = await puppeteer.launch({ headless: "new" });
+    browser = await puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless,
+  });
     const page = await browser.newPage();
 
     await page.goto("https://services.gdc.ga.gov/GDC/OffenderQuery/jsp/OffQryForm.jsp", {
